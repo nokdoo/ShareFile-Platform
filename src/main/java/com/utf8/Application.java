@@ -1,32 +1,26 @@
-package com.share;
-
-import java.nio.charset.Charset;
-
-import javax.servlet.Filter;
-
+package com.utf8;
+ 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
-@SpringBootApplication
-
+ 
+import javax.servlet.Filter;
+import java.nio.charset.Charset;
+ 
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
-
-public class ShareFilePlatformApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(ShareFilePlatformApplication.class, args);
-	}
-	
-	@Bean
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+ 
+    @Bean
     public HttpMessageConverter<String> responseBodyConverter() {
         return new StringHttpMessageConverter(Charset.forName("UTF-8"));
     }
@@ -38,5 +32,4 @@ public class ShareFilePlatformApplication {
         characterEncodingFilter.setForceEncoding(true);
         return characterEncodingFilter;
     }
-    
 }

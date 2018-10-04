@@ -1,5 +1,8 @@
 package com.share.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,6 +24,15 @@ public class SampleController {
 	}
 	
 	
+	
+
+	@GetMapping("/sample2")
+	public void sample2(Model model) {
+		
+		model.addAttribute("greeting","안냐세요");
+	}
+	
+	
 
 	@GetMapping("kakaoTest")
 	public void kakaoTest(Model model) {
@@ -30,18 +42,36 @@ public class SampleController {
 	}
 	
 	
+	
+	
+	
 
 	@GetMapping("kakaoTest2")
-	public void kakaoTest2(Model model) {
+	public String kakaoTest2(Model model) {
 		model.addAttribute("greeting","돌아옴");
+		return "sample1";
 	}
 	
 
-	@RequestMapping(value="/kakaoLogin", produces = "application/json", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value="/kakaoLogin", produces = "application/json; charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST})
 	public void kakaoLogin(@RequestBody String code, HttpServletRequest request, HttpServletResponse httpservlet)
 	{
-		System.out.println("asdasd");
+		try {
+			code = URLDecoder.decode(code, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("code : "+code);
+	}
+	
+	
+	@RequestMapping(value="/koreanTest", produces = "application/json", method = {RequestMethod.GET,RequestMethod.POST})
+	public void koreanTest(@RequestBody String code, HttpServletRequest request, HttpServletResponse httpservlet) throws Exception
+	{
+		String temp = URLDecoder.decode(code, "UTF-8");
+		System.out.println("code : "+code);
+		System.out.println("code : "+temp);
 	}
 	
 }
