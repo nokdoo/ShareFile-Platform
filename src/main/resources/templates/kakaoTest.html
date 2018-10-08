@@ -1,5 +1,4 @@
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
 <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -12,39 +11,30 @@
 <body>
 <a id="kakao-login-btn"></a>
 <script type='text/javascript'>
-  //<![CDATA[
-    // 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init('4dfdf92f4cf88310e0018f29e0ec6f36');
-    // 카카오 로그인 버튼을 생성합니다.
-    Kakao.Auth.createLoginButton({
-      container: '#kakao-login-btn',
-      success: function(authObj) {
-        // 로그인 성공시, API를 호출합니다.
-        Kakao.API.request({
-          url: '/v2/user/me',
-          success: function(res) {
-            alert(JSON.stringify(res));
-
-            
-            $.ajax({
-            	type:'post',
-            	url :'/kakaoLogin',
-            	data: { code : JSON.stringify(res) },
-            	contentType: "application/json; charset=UTF-8",
-            });
-			alert("!!");
-			window.open("/kakaoTest2","_self","","");
-          },
-          fail: function(error) {
-            alert(JSON.stringify(error));
-          }
-        });
-      },
-      fail: function(err) {
-        alert(JSON.stringify(err));
-      }
+//<![CDATA[
+// 사용할 앱의 JavaScript 키를 설정해 주세요.
+Kakao.init('3d86cbdd303358a747f0c249c358c865');
+// 카카오 로그인 버튼을 생성합니다.
+Kakao.Auth.createLoginButton({
+  container: '#kakao-login-btn',
+  success: function(authObj) {
+    alert(JSON.stringify(authObj));
+    $.ajax({
+        type:'post',
+        url :'/kakaoLogin',
+        data: decodeURIComponent(JSON.stringify(authObj)),
+        contentType: "application/json",
+        success : function(data){
+        	window.location.href = '/mustLogin';
+        }
+>>>>>>> 6c6383eeadd0f698678627ccf0f3bbd1a0213895
     });
-  //]]>
+  },
+  fail: function(err) {
+     alert(JSON.stringify(err));
+  }
+});
+//]]>
 </script>
 
 </body>
