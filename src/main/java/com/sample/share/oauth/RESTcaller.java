@@ -1,4 +1,4 @@
-package com.share.oauth;
+package com.sample.share.oauth;
 
 import java.io.BufferedReader;
 import java.io.IOException;

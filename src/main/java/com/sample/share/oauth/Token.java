@@ -1,4 +1,4 @@
-package com.share.oauth;
+package com.sample.share.oauth;
 
 import java.io.IOException;
 import java.util.Map;
