@@ -1,4 +1,4 @@
-package com.share.controller;
+package com.sample.share.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
