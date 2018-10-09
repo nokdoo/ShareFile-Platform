@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class SampleController {
@@ -49,11 +48,11 @@ public class SampleController {
 	@GetMapping("kakaoTest2")
 	public String kakaoTest2(Model model) {
 		model.addAttribute("greeting","돌아옴");
-		return "sample1";
+		return "kakaoTest2";
 	}
 	
 
-	@RequestMapping(value="/kakaoLogin", produces = "application/json; charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value="/kakaoLogin123", produces = "application/json; charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST})
 	public void kakaoLogin(@RequestBody String code, HttpServletRequest request, HttpServletResponse httpservlet)
 	{
 		try {
