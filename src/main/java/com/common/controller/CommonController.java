@@ -1,8 +1,8 @@
 package com.common.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -63,9 +63,8 @@ public class CommonController {
 		
 		
 		
-		System.out.println(servletContext.getRealPath("/"));
-		System.out.println(resourceLoader.getResource("classpath:config.properties").getURI().getPath()); 
-		System.out.println(resourceLoader.getResource("resources/style.css").getURI().getPath());
+	
+		//System.out.println(${storageDirectory});
 
 		
 		return "/common/login";
