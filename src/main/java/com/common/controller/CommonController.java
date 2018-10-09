@@ -21,6 +21,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate.HttpClientOption;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
@@ -50,12 +51,10 @@ public class CommonController {
 	@Autowired 
 	private AccountRepository accountRepo;
 	
+
+	@Value("${storageDirectory}")
+	String storageDirectory;
 	
-	@Autowired 
-	private ServletContext servletContext;
-	
-	@Autowired private 
-	ResourceLoader resourceLoader;
 
 	
 	@GetMapping("/login")
@@ -69,6 +68,41 @@ public class CommonController {
 		
 		return "/common/login";
 	}
+	
+	
+	@GetMapping("/temp1")
+	public String temp1(Model model) {
+		
+		
+		
+		
+		return "/commonLayout";
+	}
+	
+	
+	@GetMapping("/temp2")
+	public String temp2(Model model) {
+		
+		
+		
+		
+		return "/createdPage";
+	}
+	
+	
+	@GetMapping("/temp3")
+	public String temp3(Model model) {
+		
+		
+		
+		
+		return "/rowPage";
+	}
+	
+	
+	
+	
+	
 	
 	
 	

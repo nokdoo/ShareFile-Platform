@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/commonLayout">
+<head>
+    <title>Page Title</title>
+    <link href="page-style.css" rel="stylesheet" />
+</head>
+<body>
+    <section layout:fragment="content">
+        <p>Page Content</p>
+    </section>
+    <footer>
+        This is notiong...
+    </footer>
+<script layout:fragment="custom-script">
+    console.log('script for page');
+</script>
+</body>
+</html>
