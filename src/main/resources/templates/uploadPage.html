@@ -1,0 +1,94 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+<title>uploca page.</title>
+<script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}"></script>
+<script type="text/javascript">
+
+
+//파일 멀티 업로드
+function F_FileMultiUpload(files, obj) {
+   if(confirm(files.length + "개의 파일을 업로드 하시겠습니까?") ) {
+       var data = new FormData();
+       for (var i = 0; i < files.length; i++) {
+          data.append('file', files[i]);
+       }
+
+       var url = "/upload";
+       $.ajax({
+          url: url,
+          method: 'post',
+          data: data,
+          dataType: 'json',
+          processData: false,
+          contentType: false,
+          success: function(res) {
+              F_FileMultiUpload_Callback(res.files);
+          }
+       });
+   }
+}
+
+//파일 멀티 업로드 Callback
+function F_FileMultiUpload_Callback(files) {
+   for(var i=0; i < files.length; i++)
+       console.log(files[i].file_nm + " - " + files[i].file_size);
+}
+
+
+$(function () {
+    var obj = $("#dropzone");
+
+    obj.on('dragenter', function (e) {
+         e.stopPropagation();
+         e.preventDefault();
+         $(this).css('border', '2px solid #5272A0');
+    });
+
+    obj.on('dragleave', function (e) {
+         e.stopPropagation();
+         e.preventDefault();
+         $(this).css('border', '2px dotted #8296C2');
+    });
+
+    obj.on('dragover', function (e) {
+         e.stopPropagation();
+         e.preventDefault();
+    });
+
+    obj.on('drop', function (e) {
+         e.preventDefault();
+         $(this).css('border', '2px dotted #8296C2');
+
+         var files = e.originalEvent.dataTransfer.files;
+         if(files.length < 1)
+              return;
+
+         F_FileMultiUpload(files, obj);
+    });
+
+});
+
+</script>
+<style>
+    #dropzone
+    {
+        border:2px dotted #3292A2;
+        width:90%;
+        height:50px;
+        color:#92AAB0;
+        text-align:center;
+        font-size:24px;
+        padding-top:12px;
+        margin-top:10px;
+    }
+</style>
+
+</head>
+<body>
+<div id="dropzone">Drag &#38; Drop Files Here</div> 
+
+</body>
+</html>
