@@ -86,7 +86,7 @@ public class SampleController {
 		System.out.println("code : "+temp);
 	}
 	
-	@RequestMapping("/sample/uploadPage")
+	//@RequestMapping("/sample/uploadPage")
 	public void uploadPage(Model model) {
 		File folder = new File(storageDirectory);
 		File[] listOfFiles = folder.listFiles();
@@ -98,25 +98,26 @@ public class SampleController {
 
 	}
 	
-	@PostMapping("upload")
+	//@PostMapping("upload")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void upload(HttpServletRequest req) throws IOException, ServletException{
 		Collection<Part> parts = req.getParts();
+		/*
 		List<FileVO> fileList = parts.stream()
 									.map(p -> { 
 										FileVO fileVO = new FileVO(p); 
 										return fileVO;
 									}).collect(Collectors.toList());
-		
+		*/
 		for(Part part : parts) {
 			String filename = part.getSubmittedFileName();
 			part.write(storageDirectory+filename);
 			System.out.println(storageDirectory+filename);
-			FileVO fileVO = new FileVO(part);
+			//FileVO fileVO = new FileVO(part);
 		}
 	}
 	
-	@GetMapping("download")
+	//@GetMapping("download")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void download(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		String filePath = storageDirectory+"asd1.pdf";
