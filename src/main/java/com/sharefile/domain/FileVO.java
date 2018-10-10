@@ -33,6 +33,8 @@ public class FileVO {
 		private LocalDateTime regdate;
 		private LocalDateTime accessdate;
 		
+		
+		
 		public FileVO(Part part) {
 			name = part.getSubmittedFileName();
 		}
