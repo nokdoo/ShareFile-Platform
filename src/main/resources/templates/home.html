@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+  <title layout:title-pattern="$CONTENT_TITLE :: $DECORATOR_TITLE">Site Tilte</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/twitdeck.css}">
+<script type="text/javascript" th:src="@{/js/twitdeck.js}"></script>
+</head>
+<body>
+<div class="application js-app is-condensed">
+	<header class="js-app-header pin-all app-header is-condensed">
+	<div class="js-app-header-inner pin-v app-header-inner">
+		<button class="js-show-drawer js-show-tip Button Button--primary Button--large tweet-button margin-t--4 margin-b--8" title="" data-tooltip-position="right" data-drawer="compose" data-original-title="New Tweet"><i class="Icon icon-compose"></i><span class="label margin-an" data-test-id="tweet-call-to-action">Tweet</span></button>
+		<!-- wrap close button as it has different padding -->
+		<div class="attach-compose-buttons">
+			<button class="js-hide-drawer margin-t--4 margin-b--8 is-hidden Button Button--primary Button--large tweet-button txt-left" data-drawer="compose"><i class="Icon icon-compose" data-tweet-type="tweet reply"></i><i class="Icon icon-compose-dm icon-large" data-tweet-type="message"></i></button>
+		</div>
+		<div class="overlay is-hidden">
+		</div>
+		<div class="js-search js-overlay app-search">
+			<button class="js-header-action js-show-tip app-search-fake padding-al margin-bm" data-action="show-search" title="" data-tooltip-position="right" data-original-title="Search"><i class="icon icon-search"></i></button>
+			<form class="js-search-form app-search-form full-width">
+				<label class="is-vishidden">Search</label>
+				<div class="js-search-input-control search-input-control ">
+					<input type="text" class="js-app-search-input app-search-input search-input" data-title="" placeholder="Search Twitter" value=""><a href="#" class="js-perform-search txt-size--14 search-input-perform-search" tabindex="-1"><i class="icon icon-search txt-size--16"></i></a><a href="#" class="js-clear-search txt-size--14 search-input-clear-search" tabindex="-1"><i class="icon icon-close icon-small"></i></a><span class="js-spinner txt-size--14 spinner-small spinner-small-trans search-input-spinner"></span>
+				</div>
+			</form>
+			<div class="js-search-in-popover">
+				<div class="js-popover popover br-1 bs-1 bg-color-twitter-white color-twitter-dark-black is-hidden is-inverted-dark popover-position-rt" style="width: 350px;">
+					<div class="caret">
+						<span class="caret-outer"></span><span class="caret-inner"></span>
+					</div>
+					<div class="js-popover-content scroll-none">
+						<!-- app search -->
+						<form class="js-search-form app-search app-search-in-popover margin-a--10">
+							<label class="is-vishidden">Search</label>
+							<div class="js-search-input-control search-input-control ">
+								<input type="text" class="js-app-search-input search-input" data-title="Search" placeholder="Search" value=""><a href="#" class="js-perform-search txt-size--14 search-input-perform-search" tabindex="-1"><i class="icon icon-search txt-size--16"></i></a><a href="#" class="js-clear-search txt-size--14 search-input-clear-search" tabindex="-1"><i class="icon icon-close icon-small"></i></a><span class="js-spinner txt-size--14 spinner-small spinner-small-trans search-input-spinner"></span>
+							</div>
+						</form>
+						<!-- typeahead -->
+						<div class="js-typeahead-dropdown margin-t--6 scroll-v scroll-styled-v">
+							<div class="js-typeahead-recent-search-clear js-typeahead-item recent-search-clear is-actionable color-twitter-blue pull-right margin-r--12 margin-t--6 padding-t--2" data-search-type="recent-search-clear" data-search-query="recent-search-clear">
+								 Clear all
+							</div>
+							<ul class="js-typeahead-recent-search-list is-hidden">
+							</ul>
+							<ul class="js-typeahead-saved-search-list is-hidden">
+							</ul>
+							<ul class="js-typeahead-topic-list is-hidden">
+							</ul>
+							<ul class="js-typeahead-user-list is-hidden">
+							</ul>
+							<ul class="js-typeahead-conversation-list is-hidden list-divider">
+							</ul>
+							<ul class="js-typeahead-lists-list is-hidden list-divider">
+							</ul>
+						</div>
+						<!-- search results -->
+						<div class="js-search-results-container is-hidden height-vh--100">
+							<div class="js-user-results user-results">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="js-column-nav-scroller column-navigator antiscroll-wrap">
+			<nav id="column-navigator" class="js-column-nav scroll-v antiscroll-inner" style="right: 0px; bottom: 0px;">
+			<div class="js-column-nav-list">
+				<ul class="js-int-scroller">
+					<li class="js-column-nav-menu-item column-nav-item is-new" data-column="c1539145127630s51" data-customtimeline-id="" data-customtimeline-account=""><i class="icon icon-xsmall icon-dot column-nav-updates"></i><a class="js-header-action js-drag-handle drag-handle link-clean cf padding-h--10 column-nav-link txt-size--16" data-action="jumpto" data-column="c1539145127630s51">
+					<div class="obj-left">
+						<i class="icon icon-home icon-large position-rel" data-action="drag"></i>
+					</div>
+					<div class="js-column-title nbfc hide-condensed">
+						<span class="column-heading">Home</span><span class="attribution txt-mute txt-sub-antialiased txt-ellipsis vertical-align--baseline">Name(ID)</span>
+					</div>
+					</a></li>
+					<li class="js-column-nav-menu-item column-nav-item" data-column="c1539145127631s54" data-customtimeline-id="" data-customtimeline-account=""><i class="icon icon-xsmall icon-dot column-nav-updates"></i><a class="js-header-action js-drag-handle drag-handle link-clean cf padding-h--10 column-nav-link txt-size--16" data-action="jumpto" data-column="c1539145127631s54">
+					<div class="obj-left">
+						<i class="icon icon-notifications icon-large position-rel" data-action="drag"></i>
+					</div>
+					<div class="js-column-title nbfc hide-condensed">
+						<span class="column-heading">Notifications</span><span class="attribution txt-mute txt-sub-antialiased txt-ellipsis vertical-align--baseline">Name(ID)</span>
+					</div>
+					</a></li>
+					<li class="js-column-nav-menu-item column-nav-item " data-column="c1539145127631s57" data-customtimeline-id="" data-customtimeline-account=""><i class="icon icon-xsmall icon-dot column-nav-updates"></i><a class="js-header-action js-drag-handle drag-handle link-clean cf padding-h--10 column-nav-link txt-size--16" data-action="jumpto" data-column="c1539145127631s57">
+					<div class="obj-left">
+						<i class="icon icon-message icon-large position-rel" data-action="drag"><span class="js-unread-count msg-unread-count numbered-badge bg-color-twitter-blue numbered-badge-onnav anim anim-slower ">0</span></i>
+					</div>
+					<div class="js-column-title nbfc hide-condensed">
+						<span class="column-heading">Messages</span><span class="attribution txt-mute txt-sub-antialiased txt-ellipsis vertical-align--baseline">Name(ID)</span>
+					</div>
+					</a></li>
+					<li class="js-column-nav-menu-item column-nav-item " data-column="c1539145127631s60" data-customtimeline-id="" data-customtimeline-account=""><i class="icon icon-xsmall icon-dot column-nav-updates"></i><a class="js-header-action js-drag-handle drag-handle link-clean cf padding-h--10 column-nav-link txt-size--16" data-action="jumpto" data-column="c1539145127631s60">
+					<div class="obj-left">
+						<i class="icon icon-trending icon-large position-rel" data-action="drag"></i>
+					</div>
+					<div class="js-column-title nbfc hide-condensed">
+						<span class="column-heading">Trending</span>
+					</div>
+					</a></li>
+				</ul>
+				<a class="js-header-action js-header-add-column link-clean cf app-nav-link padding-h--10 margin-tm with-nav-border-t" data-action="add-column" data-title="Add column">
+				<div class="obj-left margin-l--2">
+					<i class="icon icon-plus icon-medium"></i>
+				</div>
+				<div class="nbfc padding-ts hide-condensed txt-size--16 app-nav-link-text">
+					Add column
+				</div>
+				</a>
+			</div>
+			</nav>
+		</div>
+		<nav class="app-navigator margin-bm padding-ts"><a class="js-header-action js-app-add-column link-clean cf app-nav-link padding-h--10 with-nav-border-t is-hidden" data-action="add-column" data-title="Add column">
+		<div class="obj-left margin-l--2">
+			<i class="icon icon-plus icon-medium"></i>
+		</div>
+		<div class="nbfc padding-ts hide-condensed txt-size--16 app-nav-link-text">
+			Add column
+		</div>
+		</a><a class="js-header-action link-clean cf app-nav-link padding-h--10" data-action="change-sidebar-width" data-title="Expand">
+		<div class="obj-left margin-l--2">
+			<i class="icon icon-arrow-l-double icon-medium"></i><i class="icon icon-arrow-r-double icon-medium"></i>
+		</div>
+		<div class="nbfc padding-ts hide-condensed txt-size--16 app-nav-link-text">
+			Collapse
+		</div>
+		</a><a class="js-show-drawer js-header-action link-clean cf app-nav-tab" data-title="Accounts" data-drawer="accountSettings">
+		<div class="obj-left margin-l--2">
+			<i class="icon icon-user-switch icon-medium position-rel"><span class="js-account-count msg-unread-count numbered-badge bg-color-twitter-blue numbered-badge-onnav">0</span></i>
+		</div>
+		<div class="nbfc padding-ts hide-condensed txt-size--16 app-nav-tab-text">
+			Accounts
+		</div>
+		</a><a class="js-hide-drawer position-rel link-clean cf app-nav-tab bg-color-twitter-lightest-gray is-hidden is-selected" data-title="Accounts" data-drawer="accountSettings">
+		<div class="obj-left margin-l--2">
+			<i class="icon icon-user-switch icon-medium"></i>
+		</div>
+		<div class="nbfc padding-ts hide-condensed txt-size--16 app-nav-tab-text">
+			Accounts
+		</div>
+		</a><a class="js-header-action js-app-settings link-clean cf app-nav-link padding-h--10" data-action="settings-menu" data-title="Settings">
+		<div class="obj-left margin-l--2">
+			<i class="icon icon-settings icon-medium"></i>
+		</div>
+		<div class="nbfc padding-ts hide-condensed txt-size--16 app-nav-link-text">
+			Settings
+		</div>
+		</a></nav>
+		<div class="js-account-summary">
+			<a data-user-name="twitID" href="#" rel="user">
+			<div class="nav-user-info cf margin-r--6 txt-size--14">
+				<img class="obj-left tweet-avatar avatar size36 margin-h--6" src="" width="36" height="36" alt="avatar">
+				<div class="nbfc hide-condensed margin-t--2">
+					<div class="">
+						<span class="fullname txt-ellipsis inline-block txt-size--14 position-rel txt-bold"> 계정 닉네임 </span>
+					</div>
+					<span class="username txt-ellipsis inline-block txt-size--12"> Name(ID) </span>
+				</div>
+			</div>
+			</a>
+		</div>
+		<h1 class="js-logo app-title height--53">
+		<div class="is-hidden visible-in-contracted-header height--53 full-width flex flex-align--center flex-justify-content--center">
+			<span class="tweetdeck-logo height--24 width--26 color-transparent txt-size--0">TweetDeck</span>
+		</div>
+		<div class="invisible-in-contracted-header height--53 full-width flex flex-align--center">
+			<img src="https://ton.twimg.com/tweetdeck-web/web/assets/global/tweetdeck.6fd2a0c343.svg" class="margin-l--12 height--24" alt="TweetDeck">
+		</div>
+		</h1>
+		<h1 class="js-beta-logo app-title height--53 is-hidden">
+		<div class="is-hidden visible-in-contracted-header height--53 full-width flex flex-column flex-align--center flex-justify-content--space-between">
+			<span class="tweetdeck-logo beta height--24 width--26 color-transparent txt-size--0">TweetDeck</span>
+			<div class="full-width bg-color-twitter-blue color-twitter-white txt-size--10 txt-uppercase txt-weight-normal letter-spacing--3 padding-v--2">
+				Beta
+			</div>
+		</div>
+		<div class="invisible-in-contracted-header height--53 full-width flex flex-align--center position-rel nbfc">
+			<img src="https://ton.twimg.com/tweetdeck-web/web/assets/global/tweetdeck-beta.1244675790.svg" class="margin-l--12 height--24" alt="TweetDeck">
+			<div class="position-abs width--88 margin-a---10 bg-color-twitter-blue color-twitter-white txt-size--10 txt-uppercase txt-weight-normal letter-spacing--3 txt-line-height--14 padding-v--2 beta-ribbon">
+				Beta
+			</div>
+		</div>
+		</h1>
+	</div>
+	</header>
+	</div>
+</body>
+</html>

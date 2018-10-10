@@ -32,13 +32,27 @@ public class CommonController {
 	String storageDirectory;
 	
 
-	
+
 	@GetMapping("/login")
 	public String login(Model model) {
 	
 		//System.out.println(${storageDirectory});
 		return "/common/login";
 	}
+	
+	
+
+	@GetMapping("/home")
+	public String home(Model model) {
+	
+		//System.out.println(${storageDirectory});
+		return "/home";
+	}
+	
+	
+	
+	
+	////////아래로 삭제 예정
 	
 	
 	@GetMapping("/temp1")
