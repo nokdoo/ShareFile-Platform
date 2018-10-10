@@ -4,7 +4,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.sharefile.domain.FileVO;
 
 @Controller
 public class SampleController {
@@ -80,13 +87,21 @@ public class SampleController {
 	@PostMapping("upload")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void upload(HttpServletRequest req) throws IOException, ServletException{
-		System.out.println("testupload");
-		int i = 0;
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("persistence");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		
 		Collection<Part> parts = req.getParts();
+		List<FileVO> fileList = parts.stream()
+									.map(p -> { 
+										FileVO fileVO = new FileVO(p); 
+										return fileVO;
+									}).collect(Collectors.toList());
+		
 		for(Part part : parts) {
-			String filename = "asd"+(++i)+".pdf";
+			String filename = part.getSubmittedFileName();
 			part.write(storageDirectory+filename);
-			//part.write("d:\\"+java.io.File.separator + filename);
+			System.out.println(storageDirectory+filename);
 		}
 	}
 }
