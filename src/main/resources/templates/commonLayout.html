@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+  <title layout:title-pattern="$CONTENT_TITLE :: $DECORATOR_TITLE">Site Tilte</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+  <header layout:fragment="header">
+    <h1>Layout Tilte</h1>
+  </header>
+  <section layout:fragment="content">
+    <p>Layout Content</p>
+  </section>
+  <footer layout:fragment="footer">
+    <p>Layout Footer</p>
+  </footer>
+
+
+</body>
+</html>
