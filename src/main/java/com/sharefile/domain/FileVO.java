@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.servlet.http.Part;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,10 @@ public class FileVO {
 		private String storedName;
 		private LocalDateTime regdate;
 		private LocalDateTime accessdate;
+		
+		public FileVO(Part part) {
+			name = part.getSubmittedFileName();
+		}
 		
 
 }
