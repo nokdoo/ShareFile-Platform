@@ -30,14 +30,8 @@ public class FileVO {
 		private String tag;
 		private String uploaderId;
 		private String storedName;
+		private String storedPath;		
 		private LocalDateTime regdate;
 		private LocalDateTime accessdate;
 		
-		
-		
-		public FileVO(Part part) {
-			name = part.getSubmittedFileName();
-		}
-		
-
 }
