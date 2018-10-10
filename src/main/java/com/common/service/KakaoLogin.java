@@ -24,8 +24,10 @@ public class KakaoLogin {
 
 		final List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 		postParams.add(new BasicNameValuePair("grant_type", "authorization_code"));
-		postParams.add(new BasicNameValuePair("client_id", "b022483ace315594a982fb6e530a049e")); // REST API KEY
-		postParams.add(new BasicNameValuePair("redirect_uri", "http://alterlife.xyz/kakaoLogin")); // 리다이렉트 URI
+		//postParams.add(new BasicNameValuePair("client_id", "b022483ace315594a982fb6e530a049e")); // REST API KEY
+		//postParams.add(new BasicNameValuePair("redirect_uri", "http://alterlife.xyz/kakaoLogin")); // 리다이렉트 URI
+		postParams.add(new BasicNameValuePair("client_id", "04508ced113435af63e4b06ce58d2f20")); // REST API KEY
+		postParams.add(new BasicNameValuePair("redirect_uri", "http://123.212.109.70:9999/kakaoLogin")); // 리다이렉트 URI
 		postParams.add(new BasicNameValuePair("code", autorize_code)); // 로그인 과정중 얻은 code 값
 
 		final HttpClient client = HttpClientBuilder.create().build();
