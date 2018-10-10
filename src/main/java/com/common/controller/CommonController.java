@@ -92,7 +92,7 @@ public class CommonController {
 		session.setAttribute("login", account);
 		System.out.println(account.toString());
 		
-		return "/sample1";
+		return "/sample/sample1";
 		
 	}
 	

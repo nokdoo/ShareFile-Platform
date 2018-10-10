@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,27 +23,30 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
 public class SampleController {
+	
+	@Value("${storageDirectory}")
+	String storageDirectory;
 
-	@GetMapping("/sample1")
+	@GetMapping("/sample/sample1")
 	public void sample1(Model model) {
 		
 		model.addAttribute("greeting","안냐세요");
 	}
 	
-	@GetMapping("/sample2")
+	@GetMapping("/sample/sample2")
 	public void sample2(Model model) {
 		
 		model.addAttribute("greeting","안냐세요");
 	}
 
-	@GetMapping("kakaoTest")
+	@GetMapping("/sample/kakaoTest")
 	public void kakaoTest(Model model) {
 		
 		System.out.println("!!!!!!!!!!!!!!!!");
 		model.addAttribute("greeting","안냐세요");
 	}
 
-	@GetMapping("kakaoTest2")
+	@GetMapping("/sample/kakaoTest2")
 	public String kakaoTest2(Model model) {
 		model.addAttribute("greeting","돌아옴");
 		return "kakaoTest2";
@@ -69,12 +73,11 @@ public class SampleController {
 		System.out.println("code : "+temp);
 	}
 	
-	@RequestMapping("/uploadPage")
-	public String uploadPage() {
-		return "uploadPage";
+	@RequestMapping("/sample/uploadPage")
+	public void uploadPage() {
 	}
 	
-	@PostMapping("/upload")
+	@PostMapping("upload")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void upload(HttpServletRequest req) throws IOException, ServletException{
 		System.out.println("testupload");
@@ -82,7 +85,8 @@ public class SampleController {
 		Collection<Part> parts = req.getParts();
 		for(Part part : parts) {
 			String filename = "asd"+(++i)+".pdf";
-			part.write("d:\\"+java.io.File.separator + filename);
+			part.write(storageDirectory+filename);
+			//part.write("d:\\"+java.io.File.separator + filename);
 		}
 	}
 }
