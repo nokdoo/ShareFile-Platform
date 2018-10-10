@@ -1,16 +1,22 @@
 package com.sample.share.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
@@ -81,16 +87,20 @@ public class SampleController {
 	}
 	
 	@RequestMapping("/sample/uploadPage")
-	public void uploadPage() {
+	public void uploadPage(Model model) {
+		File folder = new File(storageDirectory);
+		File[] listOfFiles = folder.listFiles();
+		
+		List<String> fileList = Arrays.stream(listOfFiles)
+		.map(File::getName).collect(Collectors.toList());
+		
+		model.addAttribute("fileList", fileList);
+
 	}
 	
 	@PostMapping("upload")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void upload(HttpServletRequest req) throws IOException, ServletException{
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("persistence");
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
-		
 		Collection<Part> parts = req.getParts();
 		List<FileVO> fileList = parts.stream()
 									.map(p -> { 
@@ -102,6 +112,33 @@ public class SampleController {
 			String filename = part.getSubmittedFileName();
 			part.write(storageDirectory+filename);
 			System.out.println(storageDirectory+filename);
+			FileVO fileVO = new FileVO(part);
+		}
+	}
+	
+	@GetMapping("download")
+	@ResponseStatus(value = HttpStatus.OK)
+	public void download(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		String filePath = storageDirectory+"asd1.pdf";
+		String fileName = "asd1.pdf";
+		byte b[] = new byte[4096];
+		try(
+			FileInputStream fileInputStream = new FileInputStream(filePath);
+			ServletOutputStream servletOutStream = res.getOutputStream();
+		) {
+
+	        String sMimeType = "application/octet-stream";
+	        
+	        res.setContentType(sMimeType);
+	        
+	        //한글업로드
+	        String sEncoding = new String(fileName.getBytes("euc-kr"),"8859_1");
+	        res.setHeader("Content-Disposition", "attachment; filename= " + sEncoding);
+	        
+	        int numRead;
+	        while((numRead = fileInputStream.read(b,0,b.length))!= -1){
+	            servletOutStream.write(b,0,numRead);            
+	        }
 		}
 	}
 }

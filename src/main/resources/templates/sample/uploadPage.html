@@ -88,7 +88,12 @@ $(function () {
 
 </head>
 <body>
-<div id="dropzone">Drag &#38; Drop Files Here</div> 
+<div id="dropzone">
+	Drag &#38; Drop Files Here
+	<ul th:each="file : ${fileList}">
+		<li th:text="${file}">
+	</ul>
+</div> 
 
 </body>
 </html>
