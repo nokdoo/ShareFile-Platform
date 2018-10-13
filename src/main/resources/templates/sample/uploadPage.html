@@ -1,33 +1,64 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
 <title>uploca page.</title>
+<style>
+.upload-file {
+	
+}
+
+.upload-file:after {
+	content: "\A";
+	background: red;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 0%;
+}
+</style>
 <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}"></script>
 <script type="text/javascript">
 
+var idx = 0;
+
+//업로드 시작
+//================================================
+function uploadFile(file, obj){
+
+	var data = new FormData();
+    var filename = file.name;
+    var ul = $('#filezone > ul');
+    var li = document.createElement('li');
+    var progress = document.createElement('progress');
+    li.innerText = filename
+    li.append(progress);
+    ul.prepend(li);
+ 
+    var req = new XMLHttpRequest();
+    data.set('file', file);
+    req.open('post', '/upload');
+    req.onreadystatechange = function (aEvt) {
+    	  if (req.readyState === 4) {
+    	     if(req.status === 200)
+    	    	 progress.remove();
+    	     else
+    	      console.log("error"+filename);
+    	  }
+    	};
+    req.send(data);
+    
+}
 
 //파일 멀티 업로드
 function F_FileMultiUpload(files, obj) {
    if(confirm(files.length + "개의 파일을 업로드 하시겠습니까?") ) {
-       var data = new FormData();
-       for (var i = 0; i < files.length; i++) {
-          data.append('file', files[i]);
-       }
-
-       var url = "/upload";
-       $.ajax({
-          url: url,
-          method: 'post',
-          data: data,
-          dataType: 'json',
-          processData: false,
-          contentType: false,
-          success: function(res) {
-              F_FileMultiUpload_Callback(res.files);
-          }
-       });
+	   for (var i = 0; i < files.length; i++) {
+		   uploadFile(files[i], obj);
+	   }
    }
 }
 
@@ -71,29 +102,98 @@ $(function () {
 
 });
 
+//업로드 끝
+//================================================
+	
+//다운로드 시작
+//================================================
+	
+//체크 목록
+function CheckedObj_File(){
+	var checked_obj_file = [];
+	$("[name=file]").each(function() {
+		if(!$(this).is(":checked")) return true;
+		
+		var element = {
+			obj : $(this),
+			filename : $(this).next().text()
+		};
+		checked_obj_file.push(element);
+		
+	});
+	return checked_obj_file;
+}
+
+function downloadFile(obj_file){
+    var filename = obj_file.filename;
+    var obj = obj_file.obj;
+    var req = new XMLHttpRequest();
+    var param = "?filename="+encodeURIComponent(filename)+"";
+    
+    req.open('get', "/download"+param);
+    req.responseType = "blob";
+    req.onreadystatechange = function (aEvt) {
+    	  if (req.readyState === 4) {
+    	     if(req.status === 200){
+    	    	 var blob = new Blob([this.response], {type: 'application/octet-stream'});
+    	         var downloadUrl = URL.createObjectURL(blob);
+    	         var a = document.createElement("a");
+    	         a.href = downloadUrl;
+    	         a.download = filename;
+    	         document.body.appendChild(a);
+    	         a.click();
+    	    	 obj.prop("checked", false);
+    	     }else{
+    	    	 console.log("error : "+filename);
+    	     }
+    	  }
+    	};
+    req.send();
+}
+
+function test(){
+	var download_list = CheckedObj_File();
+	if(confirm(download_list.length + "개의 파일을 다운로드 하시겠습니까?") ) {
+	   for (var i = 0; i < download_list.length; i++) {
+		   downloadFile(download_list[i]);
+	   }
+   }
+}
+	
+//다운로드 끝
+//================================================
+
 </script>
 <style>
-    #dropzone
-    {
-        border:2px dotted #3292A2;
-        width:90%;
-        height:50px;
-        color:#92AAB0;
-        text-align:center;
-        font-size:24px;
-        padding-top:12px;
-        margin-top:10px;
-    }
+#dropzone {
+	border: 2px dotted #3292A2;
+	width: 90%;
+	height: 50px;
+	color: #92AAB0;
+	text-align: center;
+	font-size: 24px;
+	padding-top: 12px;
+	margin-top: 10px;
+}
+
+input[type="checkbox"]:checked+label {
+	font-weight: bold;
+}
 </style>
 
 </head>
 <body>
-<div id="dropzone">
-	Drag &#38; Drop Files Here
-	<ul th:each="file : ${fileList}">
-		<li th:text="${file}">
-	</ul>
-</div> 
+	<div id="dropzone">
+		<div id="dropzone-text">Drag &#38; Drop Files Here</div>
+	</div>
+
+	<div id="filezone">
+		<ul id="filelist">
+			<li th:each="file, iter : ${fileList}"><input
+				th:id="'check'+${iter.index}" type="checkbox" name="file"> <label
+				th:for="'check'+${iter.index}" th:text="${file}"></label></li>
+		</ul>
+	</div>
 
 </body>
 </html>

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
@@ -55,7 +56,7 @@ public class ShareFileController {
 	
 	@PostMapping("upload")
 	@ResponseStatus(value = HttpStatus.OK)
-	public void upload(HttpServletRequest req) throws IOException, ServletException{
+	public void upload(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException{
 		Collection<Part> parts = req.getParts();
 		
 		/*
@@ -65,35 +66,23 @@ public class ShareFileController {
 										return fileVO;
 									}).collect(Collectors.toList());
 		*/
+		
 		for(Part part : parts) {
-			String filename = part.getSubmittedFileName();
-			part.write(storageDirectory+filename);
-			System.out.println(storageDirectory+filename);
-			
-			/*
-			 허성욱 추가부분!
-			*/
-			
-			FileVO file = new FileVO();
-			file.setAccessdate(LocalDateTime.now());
-			file.setRegdate(LocalDateTime.now());
-			file.setName(filename);
-			file.setStoredPath(storageDirectory+filename);
+			FileVO file = new FileVO(storageDirectory, part);
 			fileRepo.save(file);
-			
-			///////////////까지
-			
+			part.write(file.getStoredPath());
+			System.out.println(file.getStoredPath());
 		}
 	}
 	
 	@GetMapping("download")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void download(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		String filePath = storageDirectory+"asd1.pdf";
-		String fileName = "asd1.pdf";
+		String fileName = req.getParameter("filename");
+		System.out.println(fileName);
 		byte b[] = new byte[4096];
 		try(
-			FileInputStream fileInputStream = new FileInputStream(filePath);
+			FileInputStream fileInputStream = new FileInputStream(storageDirectory+fileName);
 			ServletOutputStream servletOutStream = res.getOutputStream();
 		) {
 
