@@ -143,6 +143,7 @@ function downloadFile(obj_file){
     	         document.body.appendChild(a);
     	         a.click();
     	    	 obj.prop("checked", false);
+    	    	 a.remove();
     	     }else{
     	    	 console.log("error : "+filename);
     	     }
