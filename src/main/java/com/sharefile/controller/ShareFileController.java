@@ -69,6 +69,7 @@ public class ShareFileController {
 		*/
 		
 		for(Part part : parts) {
+			
 			FileVO file = FileUpload.storeFile(storageDirectory, part);
 			fileRepo.save(file);
 			part.write(file.getStoredPath());
