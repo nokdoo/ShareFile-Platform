@@ -24,10 +24,10 @@ public class KakaoLogin {
 
 		final List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 		postParams.add(new BasicNameValuePair("grant_type", "authorization_code"));
-		//postParams.add(new BasicNameValuePair("client_id", "b022483ace315594a982fb6e530a049e")); // REST API KEY
-		//postParams.add(new BasicNameValuePair("redirect_uri", "http://alterlife.xyz/kakaoLogin")); // 리다이렉트 URI
-		postParams.add(new BasicNameValuePair("client_id", "04508ced113435af63e4b06ce58d2f20")); // REST API KEY
-		postParams.add(new BasicNameValuePair("redirect_uri", "http://123.212.109.70:9999/kakaoLogin")); // 리다이렉트 URI
+		postParams.add(new BasicNameValuePair("client_id", "b022483ace315594a982fb6e530a049e")); // REST API KEY
+		postParams.add(new BasicNameValuePair("redirect_uri", "http://alterlife.xyz/kakaoLogin")); // 리다이렉트 URI
+		//postParams.add(new BasicNameValuePair("client_id", "04508ced113435af63e4b06ce58d2f20")); // REST API KEY
+		//postParams.add(new BasicNameValuePair("redirect_uri", "http://123.212.109.70:9999/kakaoLogin")); // 리다이렉트 URI
 		postParams.add(new BasicNameValuePair("code", autorize_code)); // 로그인 과정중 얻은 code 값
 
 		final HttpClient client = HttpClientBuilder.create().build();
@@ -60,10 +60,42 @@ public class KakaoLogin {
 		return returnNode;
 
 	}
+	
+	
+	public static JsonNode getId(String autorize_code) {
+		final String RequestUrl = "https://kapi.kakao.com/v1/user/signup";
+		final HttpClient client = HttpClientBuilder.create().build();
+		final HttpPost post = new HttpPost(RequestUrl);
+		post.addHeader("Authorization", "Bearer " + autorize_code);
+		JsonNode returnNode = null;
+		
+		try {
+			final HttpResponse response = client.execute(post);
+			final int responseCode = response.getStatusLine().getStatusCode();
+
+			System.out.println("\nSending 'POST' request to URL : " + RequestUrl);
+			System.out.println("Response Code : " + responseCode);
+
+			// JSON 형태 반환값 처리
+			ObjectMapper mapper = new ObjectMapper();
+			returnNode = mapper.readTree(response.getEntity().getContent());
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// clear resources
+		}
+		return returnNode;
+		
+	}
 
 	public static JsonNode getKakaoUserInfo(String autorize_code) {
 
-		final String RequestUrl = "https://kapi.kakao.com/v1/user/me";
+		final String RequestUrl = "https://kapi.kakao.com/v2/user/me";
 
 		final HttpClient client = HttpClientBuilder.create().build();
 		final HttpPost post = new HttpPost(RequestUrl);
@@ -102,14 +134,19 @@ public class KakaoLogin {
 
 		
 		account.setKakaoID(userInfo.path("id").asText()); // id -> vo 넣기
+		account.setNickname("null");
+		account.setTailCode(0);
+		account.setStatus("user");
 		
+		
+		/*
 		if (userInfo.path("kaccount_email_verified").asText().equals("true")) { // 이메일 받기 허용 한 경우
 
 
 		} else {
 
 		}
-
+*/
 		/*
 		JsonNode properties = userInfo.path("properties"); // 추가정보 받아오기
 		if (properties.has("nickname"))

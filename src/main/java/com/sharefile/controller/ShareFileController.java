@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.sharefile.domain.FileVO;
 import com.sharefile.persistence.FileRepository;
+import com.sharefile.service.FileUpload;
 
 @Controller
 public class ShareFileController {
@@ -68,7 +69,7 @@ public class ShareFileController {
 		*/
 		
 		for(Part part : parts) {
-			FileVO file = new FileVO(storageDirectory, part);
+			FileVO file = FileUpload.storeFile(storageDirectory, part);
 			fileRepo.save(file);
 			part.write(file.getStoredPath());
 			System.out.println(file.getStoredPath());

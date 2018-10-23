@@ -27,20 +27,7 @@ import lombok.ToString;
 @Table(name = "File")
 public class FileVO {
 
-	private static final List<Integer> VALID_PWD_CHARS = new ArrayList<>();
 
-	static {
-		IntStream.rangeClosed('0', '9').forEach(VALID_PWD_CHARS::add); // 0-9
-		IntStream.rangeClosed('A', 'Z').forEach(VALID_PWD_CHARS::add); // A-Z
-		IntStream.rangeClosed('a', 'z').forEach(VALID_PWD_CHARS::add); // a-z
-	}
-
-	private static String GenerateCryptString() {
-		int passwordLength = 31;
-		String a = new SecureRandom().ints(passwordLength, 0, VALID_PWD_CHARS.size()).map(VALID_PWD_CHARS::get)
-				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
-		return a;
-	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,13 +40,5 @@ public class FileVO {
 	private LocalDateTime regdate;
 	private LocalDateTime accessdate;
 
-	public FileVO(String storageDirectory, Part part) {
-		String cryptString = GenerateCryptString();
-		this.name = part.getSubmittedFileName();
-		this.storedName = cryptString;
-		this.storedPath = storageDirectory+cryptString;
-		this.accessdate = LocalDateTime.now();
-		this.regdate = LocalDateTime.now();
-	}
 
 }

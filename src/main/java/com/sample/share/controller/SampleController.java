@@ -65,6 +65,14 @@ public class SampleController {
 		return "kakaoTest2";
 	}
 	
+	
+
+	@GetMapping("/sample/downForm")
+	public void downForm(Model model) {
+		
+	}
+	
+	
 
 	@RequestMapping(value="/kakaoLogin123", produces = "application/json; charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST})
 	public void kakaoLogin(@RequestBody String code, HttpServletRequest request, HttpServletResponse httpservlet)

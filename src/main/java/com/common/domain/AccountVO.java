@@ -21,8 +21,9 @@ import lombok.ToString;
 		
 		@Id
 		private String kakaoID;
-		private String nickname;	
-		
+		private String nickname;
+		private long tailCode;
+		private String status;
 	}
 
 

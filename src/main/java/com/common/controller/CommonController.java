@@ -97,10 +97,24 @@ public class CommonController {
 	{
 		System.out.println("code : "+code);
 		JsonNode token = KakaoLogin.getAccessToken(code);
+		System.out.println("token : "+token);
+		
+		JsonNode kakaoId = KakaoLogin.getId(token.path("access_token").toString());
+		System.out.println("kakao Id : "+kakaoId);
 		JsonNode profile = KakaoLogin.getKakaoUserInfo(token.path("access_token").toString());
-		System.out.println(profile);
+		System.out.println("profile : "+profile);
 		AccountVO account = KakaoLogin.changeData(profile);
-		account.setNickname("k"+account.getNickname());
+		System.out.println(account.getTailCode()+"!!");
+		
+		
+		
+		//if(){} //DB에 없는 kakaoID일시 계정 DB 등록
+		
+		
+		
+		
+		
+		//account.setNickname("k"+account.getNickname());
 		
 		System.out.println(session);
 		session.setAttribute("login", account);

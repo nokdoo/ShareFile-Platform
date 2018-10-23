@@ -23,14 +23,14 @@ $(document).ready(function() {
 	$("#kakaoLogin").append(function(){});
 		
 	
-		//Kakao.init('4dfdf92f4cf88310e0018f29e0ec6f36');
-		Kakao.init('3d86cbdd303358a747f0c249c358c865');
+		Kakao.init('4dfdf92f4cf88310e0018f29e0ec6f36');
+		//Kakao.init('3d86cbdd303358a747f0c249c358c865');
 		Kakao.Auth.createLoginButton({
 			  container: '#kakao-login-btn',
 			  success: function(authObj) {
 			    alert(JSON.stringify(authObj));
-				self.location = "https://kauth.kakao.com/oauth/authorize?client_id=04508ced113435af63e4b06ce58d2f20&redirect_uri=http://123.212.109.70:9999/kakaoLogin&response_type=code";
-				//self.location = "https://kauth.kakao.com/oauth/authorize?client_id=b022483ace315594a982fb6e530a049e&redirect_uri=http://alterlife.xyz/kakaoLogin&response_type=code";
+				//self.location = "https://kauth.kakao.com/oauth/authorize?client_id=04508ced113435af63e4b06ce58d2f20&redirect_uri=http://123.212.109.70:9999/kakaoLogin&response_type=code";
+				self.location = "https://kauth.kakao.com/oauth/authorize?client_id=b022483ace315594a982fb6e530a049e&redirect_uri=http://alterlife.xyz/kakaoLogin&response_type=code";
 			    },
 			  fail: function(err) {
 			     alert(JSON.stringify(err));
