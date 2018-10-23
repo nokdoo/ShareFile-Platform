@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.servlet.http.Part;
 
-import org.springframework.security.crypto.encrypt.Encryptors;
-
 import com.common.service.Encryptor;
 import com.sharefile.domain.FileVO;
 
