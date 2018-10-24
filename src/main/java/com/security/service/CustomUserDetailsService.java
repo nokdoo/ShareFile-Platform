@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String kakaoId) throws UsernameNotFoundException {
 
     	System.out.println("인증이 일어났다!!!!!!!!!!!!!!!! kakaoId : "+kakaoId);
-    	
+    	System.out.println("findBykakaoId(kakaoId).toString()"+accountRepo.findBykakaoId(kakaoId).toString());
     	
     	
     	
