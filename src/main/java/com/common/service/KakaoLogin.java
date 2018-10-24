@@ -13,10 +13,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.common.domain.AccountVO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sample.share.domain.KakaoAcount;
+import com.user.domain.AccountVO;
 
 public class KakaoLogin {
 	public static JsonNode getAccessToken(String autorize_code) {
@@ -133,11 +132,9 @@ public class KakaoLogin {
 		AccountVO account = new AccountVO();
 
 		
-		account.setKakaoID(userInfo.path("id").asText()); // id -> vo 넣기
+		account.setKakaoId(userInfo.path("id").asText()); // id -> vo 넣기
 		account.setNickname("null");
 		account.setTailCode(0);
-		account.setStatus("user");
-		
 		
 		/*
 		if (userInfo.path("kaccount_email_verified").asText().equals("true")) { // 이메일 받기 허용 한 경우

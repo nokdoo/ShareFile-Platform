@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.common.domain.AccountVO;
-import com.common.persistence.AccountRepository;
 import com.common.service.KakaoLogin;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.user.domain.AccountVO;
+import com.user.persistence.AccountRepository;
 
 @Controller
 public class CommonController {
@@ -128,7 +128,7 @@ public class CommonController {
 	public String test(Model model) {
 		
 		AccountVO account = new AccountVO();
-		account.setKakaoID("KAKAO ID!");
+		account.setKakaoId("KAKAO ID!");
 		accountRepo.save(account);
 		return "temp/temp";
 	}
