@@ -1,6 +1,4 @@
-package com.common.domain;
-
-import java.time.LocalDateTime;
+package com.user.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,16 +14,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Table(name="account")
-	public class AccountVO{
-		
-		@Id
-		private String kakaoID;
-		private String nickname;
-		private long tailCode;
-		private String status;
-	}
+@Table(name="authority")
+public class AuthorityVO {
 
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long rno;
+	private String authorityName;
+	private String groupName;
 	
-	
+}
