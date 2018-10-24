@@ -23,8 +23,6 @@
 <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}"></script>
 <script type="text/javascript">
 
-var idx = 0;
-
 //업로드 시작
 //================================================
 function uploadFile(file, obj){
@@ -34,7 +32,13 @@ function uploadFile(file, obj){
     var ul = $('#filezone > ul');
     var li = document.createElement('li');
     var progress = document.createElement('progress');
-    li.innerText = filename
+    var input = document.createElement('input');
+    var label = document.createElement('label');
+    label.innerText = filename;
+    input.setAttribute("type", "checkbox");
+    input.setAttribute("name", "file");  
+    li.append(input);
+    li.append(label);
     li.append(progress);
     ul.prepend(li);
  
@@ -152,7 +156,7 @@ function downloadFile(obj_file){
     req.send();
 }
 
-function test(){
+function download(){
 	var download_list = CheckedObj_File();
 	if(confirm(download_list.length + "개의 파일을 다운로드 하시겠습니까?") ) {
 	   for (var i = 0; i < download_list.length; i++) {
@@ -189,10 +193,13 @@ input[type="checkbox"]:checked+label {
 	</div>
 
 	<div id="filezone">
+		<button onclick="download()"> 다운로드 </button>
 		<ul id="filelist">
-			<li th:each="file, iter : ${fileList}"><input
-				th:id="'check'+${iter.index}" type="checkbox" name="file"> <label
-				th:for="'check'+${iter.index}" th:text="${file}"></label></li>
+			<li th:each="file:${fileList}">
+				<label th:text="${file}" th:te>
+					<input type="checkbox" name="file"> 
+				</label>
+			</li>
 		</ul>
 	</div>
 
