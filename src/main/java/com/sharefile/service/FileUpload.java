@@ -22,7 +22,7 @@ public class FileUpload {
 		file.setStoredPath(storageDirectory+cryptString+extension);
 		file.setAccessdate(LocalDateTime.now());
 		file.setRegdate(LocalDateTime.now());
-		
+		file.setUploaderId("445566");
 		return file;
 		
 		

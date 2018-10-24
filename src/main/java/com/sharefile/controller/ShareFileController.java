@@ -51,6 +51,9 @@ public class ShareFileController {
 		List<String> fileList = Arrays.stream(listOfFiles)
 		.map(File::getName).collect(Collectors.toList());
 		
+		Object obj = fileRepo.findAllByUploaderId("445566");
+		
+		
 		model.addAttribute("fileList", fileList);
 
 	}

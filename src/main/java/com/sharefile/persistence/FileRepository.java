@@ -9,4 +9,6 @@ import com.sharefile.domain.FileVO;
 @Repository
 public interface FileRepository  extends CrudRepository<FileVO, String> {
 
+	Iterable<FileVO> findAllByUploaderId(String uploaderId);
+
 }
