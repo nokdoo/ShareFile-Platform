@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -45,11 +48,20 @@ public class ShareFileController {
 	
 	@RequestMapping("/sample/uploadPage")
 	public void uploadPage(Model model) {
-		File folder = new File(storageDirectory);
+		/*
 		File[] listOfFiles = folder.listFiles();
-		
 		List<String> fileList = Arrays.stream(listOfFiles)
-		.map(File::getName).collect(Collectors.toList());
+		.map(File::getName).collect(Collectors.toList());*/
+		
+		
+		//445566 = 현재 로그인된 아이디
+		Iterable<FileVO> iterable = fileRepo.findAllByUploaderId("445566"); 
+		List<String> fileList = StreamSupport.stream(iterable.spliterator(), false)
+						.map(FileVO::getName)
+						.collect(Collectors.toList());
+		
+		Object obj = fileRepo.findAllByUploaderId("445566");
+		
 		
 		model.addAttribute("fileList", fileList);
 
@@ -77,14 +89,17 @@ public class ShareFileController {
 		}
 	}
 	
-	@GetMapping("download")
+	@PostMapping("download")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void download(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		String fileName = req.getParameter("filename");
-		System.out.println(fileName);
+		String fileName = req.getHeader("filename");
+		System.out.println("fileName : "+fileName);
+		FileVO fileVO = fileRepo.findByUploaderIdAndName("445566", fileName);
+		String crpytedName = fileVO.getStoredName();
+		System.out.println("crpytedName : "+crpytedName);
 		byte b[] = new byte[4096];
 		try(
-			FileInputStream fileInputStream = new FileInputStream(storageDirectory+fileName);
+			FileInputStream fileInputStream = new FileInputStream(storageDirectory+crpytedName);
 			ServletOutputStream servletOutStream = res.getOutputStream();
 		) {
 
@@ -94,7 +109,7 @@ public class ShareFileController {
 	        
 	        //한글업로드
 	        String sEncoding = new String(fileName.getBytes("euc-kr"),"8859_1");
-	        res.setHeader("Content-Disposition", "attachment; filename= " + sEncoding);
+	        res.setHeader("Content-Disposition", "attachment; filename= \"" + sEncoding + "\"");
 	        
 	        int numRead;
 	        while((numRead = fileInputStream.read(b,0,b.length))!= -1){

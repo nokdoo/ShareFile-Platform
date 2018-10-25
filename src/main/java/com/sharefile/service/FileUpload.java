@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.servlet.http.Part;
 
-import org.springframework.security.crypto.encrypt.Encryptors;
-
 import com.common.service.Encryptor;
 import com.sharefile.domain.FileVO;
 
@@ -24,7 +22,7 @@ public class FileUpload {
 		file.setStoredPath(storageDirectory+cryptString+extension);
 		file.setAccessdate(LocalDateTime.now());
 		file.setRegdate(LocalDateTime.now());
-		
+		file.setUploaderId("445566");
 		return file;
 		
 		

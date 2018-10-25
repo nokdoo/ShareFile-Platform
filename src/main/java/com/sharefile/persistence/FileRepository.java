@@ -9,4 +9,8 @@ import com.user.domain.AccountVO;
 @Repository
 public interface FileRepository  extends CrudRepository<FileVO, String> {
 
+	Iterable<FileVO> findAllByUploaderId(String uploaderId);
+
+	FileVO findByUploaderIdAndName(String string, String fileName);
+
 }
