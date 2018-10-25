@@ -15,7 +15,7 @@ import com.user.persistence.AuthorityRepository;
 import com.user.service.KakaoLogin;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class TokenVerificationService  {
 	
     @Autowired
     AccountRepository accountRepo;
@@ -25,19 +25,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     
 
     
-    @Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-    	System.out.println("findBykakaoId(kakaoId).toString()"+accountRepo.findBykakaoId(username).toString());
-    	
-    	
-    	
-    	return
-    			Optional.ofNullable(accountRepo.findBykakaoId(username))
-    			.filter(m-> m!=null)
-    			.map(m->new SecurityMember(m)).get();
-    	
-    }
     
     public AccountVO authenticate(String accessToken) {
     	

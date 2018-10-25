@@ -12,7 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import com.security.service.CustomUserDetailsService;
+import com.security.service.TokenVerificationService;
 import com.user.domain.AccountVO;
 
 
@@ -22,7 +22,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	
 	
     @Autowired
-	CustomUserDetailsService customUserDetailsService;
+    TokenVerificationService tokenVerificationService;
     
     
     
@@ -31,7 +31,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         String accessToken = authentication.getName();
         //String password = (String) authentication.getCredentials();
         
-        AccountVO accountVO = customUserDetailsService.authenticate(accessToken);
+        AccountVO accountVO = tokenVerificationService.authenticate(accessToken);
         		
         if (accountVO == null)
             throw new BadCredentialsException("Login Error!!");

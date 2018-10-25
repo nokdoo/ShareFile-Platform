@@ -13,14 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor;
 
-import com.security.service.CustomUserDetailsService;
-
 
 @EnableWebSecurity /* WebConfig 컴포넌트 등록 */
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	CustomUserDetailsService customUserDetailsService;
 
 	@Autowired
 	AuthenticationProvider authenticationProvider;
@@ -38,13 +34,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	
     
-    
-
-    @Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    	
-		auth.userDetailsService(customUserDetailsService);
-	}
 	
 
 
