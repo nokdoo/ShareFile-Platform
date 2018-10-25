@@ -1,30 +1,31 @@
 package com.sharefile.controller;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -48,45 +49,73 @@ public class ShareFileController {
 	
 	@RequestMapping("/sample/uploadPage")
 	public void uploadPage(Model model) {
-		/*
-		File[] listOfFiles = folder.listFiles();
-		List<String> fileList = Arrays.stream(listOfFiles)
-		.map(File::getName).collect(Collectors.toList());*/
-		
-		
 		//445566 = 현재 로그인된 아이디
 		Iterable<FileVO> iterable = fileRepo.findAllByUploaderId("445566"); 
-		List<String> fileList = StreamSupport.stream(iterable.spliterator(), false)
-						.map(FileVO::getName)
+		List<String> imgList = new ArrayList<>();
+		List<FileVO> fileList = StreamSupport.stream(iterable.spliterator(), false)
+						.peek(f->{
+								if(f.getContentType().matches("image/.*")) {
+									try(
+										FileInputStream fis = new FileInputStream(new File(f.getStoredPath()));
+										ByteArrayOutputStream baos = new ByteArrayOutputStream();
+									){
+										int len = 0;
+										byte[] buf = new byte[1024];
+								        while ((len = fis.read(buf)) != -1) {
+								        	baos.write(buf, 0, len);
+								        }
+								        byte[] fileArray = baos.toByteArray();
+								        String base64 = new String(Base64.encodeBase64(fileArray));
+								        imgList.add("data:"+f.getContentType()+";base64,"+base64);
+									} catch (FileNotFoundException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}else {
+									imgList.add("/img/extension/"+f.getExtension()+".png");
+								}
+							})
 						.collect(Collectors.toList());
 		
-		Object obj = fileRepo.findAllByUploaderId("445566");
-		
-		
 		model.addAttribute("fileList", fileList);
-
+		model.addAttribute("imgList", imgList);
 	}
 	
 	@PostMapping("upload")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void upload(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException{
-		Collection<Part> parts = req.getParts();
+		Part part = req.getPart("file");
 		
-		/*
-		List<FileVO> fileList = parts.stream()
-									.map(p -> { 
-										FileVO fileVO = new FileVO(p); 
-										return fileVO;
-									}).collect(Collectors.toList());
-		*/
+		FileVO file = FileUpload.storeFile(storageDirectory, part);
+		fileRepo.save(file);
+		part.write(file.getStoredPath());
+		System.out.println(file.getStoredPath());
 		
-		for(Part part : parts) {
-			
-			FileVO file = FileUpload.storeFile(storageDirectory, part);
-			fileRepo.save(file);
-			part.write(file.getStoredPath());
-			System.out.println(file.getStoredPath());
+		//이미지면 다시 읽어옴
+		//리사이징 필요
+		if(part.getContentType().matches("image/.*")) {
+			BufferedImage image = ImageIO.read(new File(file.getStoredPath()));
+			try(
+				ServletOutputStream servletOutStream = res.getOutputStream();
+			){
+				String sMimeType = "image/*";
+		        res.setContentType(sMimeType);
+		        ImageIO.write(image, file.getExtension(), servletOutStream);
+			}
 		}
+	}
+	
+	private BufferedImage resizeImage(String path) throws IOException {
+		Image originImage = ImageIO.read(new File(path));
+		Image resizedImage = originImage.getScaledInstance(180, 80, Image.SCALE_SMOOTH);
+		BufferedImage newImage = new BufferedImage(180, 80, BufferedImage.TYPE_INT_RGB);
+		Graphics g = newImage.getGraphics();
+        g.drawImage(resizedImage, 0, 0, null);
+        g.dispose();
+        return newImage;
 	}
 	
 	@PostMapping("download")
@@ -117,6 +146,4 @@ public class ShareFileController {
 	        }
 		}
 	}
-	
-	
 }

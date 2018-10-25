@@ -37,6 +37,8 @@ public class FileVO {
 	private String uploaderId;
 	private String storedName;
 	private String storedPath;
+	private String extension;
+	private String contentType;
 	private LocalDateTime regdate;
 	private LocalDateTime accessdate;
 

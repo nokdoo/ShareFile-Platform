@@ -22,6 +22,10 @@
 	width: 0%;
 }
 
+progress{
+	width: 100%;
+}
+
 /*
 	파일 목록
 */
@@ -47,6 +51,11 @@ div.file {
         text-align: center;
         overflow-wrap: break-word;
         word-wrap: break-word;
+	}
+	
+	img.file{
+		width: 600;
+		height: 400;	
 }
     
     
@@ -61,18 +70,34 @@ function uploadFile(file, obj){
 
 	var data = new FormData();
     var filename = file.name;
-    var ul = $('#filezone > ul');
-    var li = document.createElement('li');
+    var filetype = file.type;
+    var ext = filename.substr(filename.lastIndexOf('.') + 1);
+    
+    var div_wrap = $('#filezone > div');
+    var div_file = document.createElement('div');
+    div_file.setAttribute("class", "file");
+    
     var progress = document.createElement('progress');
+    
+    var div_filename = document.createElement('div');
+    div_filename.setAttribute("class", "filename");
+    
     var input = document.createElement('input');
-    var label = document.createElement('label');
-    label.innerText = filename;
     input.setAttribute("type", "checkbox");
     input.setAttribute("name", "file");  
-    li.append(input);
-    li.append(label);
-    li.append(progress);
-    ul.prepend(li);
+    
+    var label = document.createElement('label');
+    label.innerText = filename;
+    label.prepend(input);
+    
+    
+    div_filename.append(label);
+    
+    div_file.append(progress);
+    div_file.append(div_filename);
+    
+    div_wrap.prepend(div_file);
+    
     
     var token_csrf = $("meta[name='_csrf']").attr("content");
     var header_csrf = $("meta[name='_csrf_header']").attr("content");
@@ -81,10 +106,22 @@ function uploadFile(file, obj){
     data.set('file', file);
     req.open('post', '/upload');
     req.setRequestHeader(header_csrf, token_csrf);
+    req.responseType = 'blob';
     req.onreadystatechange = function (aEvt) {
     	  if (req.readyState === 4) {
-    	     if(req.status === 200)
+    	     if(req.status === 200){
     	    	 progress.remove();
+    	     	 var img = document.createElement('img');
+    	     	 img.setAttribute("class", "file");
+    	     	 if(filetype.match("image.*")){
+    	     		var urlCreator = window.URL || window.webkitURL;
+    	     	    var imageUrl = urlCreator.createObjectURL(this.response);
+    	     	    img.setAttribute("src", imageUrl);
+    	     	 }else{
+    	     	 	img.setAttribute("src", "/img/extension/"+ext+".png");
+    	     	 }
+    	     	 div_file.prepend(img);
+    	     }
     	     else
     	      console.log("error"+filename);
     	  }
@@ -235,13 +272,13 @@ label+input[type="checkbox"]:checked {
 	<div id="filezone">
 		<button onclick="download()"> 다운로드 </button>
 		<div>
-			<div class="file" th:each="file:${fileList}">
+			<div class="file" th:each="file, iter:${fileList}">
 				<!-- <img th:src="${file.img}" width="600" height="400"> -->
-        		<img src="http://qnimate.com/wp-content/uploads/2014/03/images2.jpg" width="600" height="400">
+        		<img th:src="${imgList[iter.index]}" class="file">
     			<div class="filename">
     				<label th:inline="text">
 						<input type="checkbox" name="file">
-						[[${file}]] 
+						[[${file.name}]] 
 					</label>
     			</div>
     		</div>

@@ -15,13 +15,15 @@ public class FileUpload {
 		
 		String cryptString = Encryptor.GenerateCryptString();
 		String fileName = part.getSubmittedFileName();
-		String extension = fileName.substring(fileName.lastIndexOf("."));
+		String extension = fileName.substring(fileName.lastIndexOf(".")+1);
 		
 		file.setName(fileName);
-		file.setStoredName(cryptString+extension);
-		file.setStoredPath(storageDirectory+cryptString+extension);
+		file.setStoredName(cryptString);
+		file.setStoredPath(storageDirectory+cryptString);
+		file.setExtension(extension);
 		file.setAccessdate(LocalDateTime.now());
 		file.setRegdate(LocalDateTime.now());
+		file.setContentType(part.getContentType());
 		file.setUploaderId("445566");
 		return file;
 		
