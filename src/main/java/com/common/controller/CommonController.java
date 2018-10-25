@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.common.service.KakaoLogin;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.user.domain.AccountVO;
 import com.user.persistence.AccountRepository;
+import com.user.service.KakaoLogin;
 
 @Controller
 public class CommonController {
@@ -33,11 +33,11 @@ public class CommonController {
 	
 
 
-	@GetMapping("/login")
+
 	public String login(Model model) {
 	
 		//System.out.println(${storageDirectory});
-		return "/common/login";
+		return "common/login";
 	}
 	
 	
@@ -80,7 +80,6 @@ public class CommonController {
 		
 		
 		
-		
 		return "/rowPage";
 	}
 	
@@ -95,17 +94,18 @@ public class CommonController {
 	@RequestMapping(value="/kakaoLogin", produces = "application/json;", method = {RequestMethod.GET,RequestMethod.POST})
 	public String kakaoLogin(@RequestParam("code")String code, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
 	{
-		System.out.println("code : "+code);
+		System.out.println("code : "+ code);
 		JsonNode token = KakaoLogin.getAccessToken(code);
 		System.out.println("token : "+token);
 		
-		JsonNode kakaoId = KakaoLogin.getId(token.path("access_token").toString());
-		System.out.println("kakao Id : "+kakaoId);
+		
+		//JsonNode kakaoId = KakaoLogin.getId(token.path("access_token").toString());
+		//System.out.println("kakao Id : "+kakaoId);
+		
 		JsonNode profile = KakaoLogin.getKakaoUserInfo(token.path("access_token").toString());
 		System.out.println("profile : "+profile);
 		AccountVO account = KakaoLogin.changeData(profile);
 		System.out.println(account.getTailCode()+"!!");
-		
 		
 		
 		//if(){} //DB에 없는 kakaoID일시 계정 DB 등록
