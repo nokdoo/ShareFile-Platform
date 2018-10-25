@@ -4,6 +4,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport"
 	content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <title>uploca page.</title>
 <style>
 .upload-file {
@@ -19,6 +21,36 @@
 	left: 0;
 	width: 0%;
 }
+
+/*
+	파일 목록
+*/
+div.file {
+        margin: 5px;
+        border: 1px solid #ccc;
+        width: 180px;
+        display: inline-block;
+        vertical-align: top;
+    }
+    
+    div.file:hover {
+        border: 1px solid #777;
+    }
+    
+    div.file img {
+        width: 100%;
+        height: auto;
+    }
+    
+    div.filename {
+        padding: 15px;
+        text-align: center;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+}
+    
+    
+    
 </style>
 <script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}"></script>
 <script type="text/javascript">
@@ -41,10 +73,14 @@ function uploadFile(file, obj){
     li.append(label);
     li.append(progress);
     ul.prepend(li);
+    
+    var token_csrf = $("meta[name='_csrf']").attr("content");
+    var header_csrf = $("meta[name='_csrf_header']").attr("content");
  
     var req = new XMLHttpRequest();
     data.set('file', file);
     req.open('post', '/upload');
+    req.setRequestHeader(header_csrf, token_csrf);
     req.onreadystatechange = function (aEvt) {
     	  if (req.readyState === 4) {
     	     if(req.status === 200)
@@ -120,7 +156,7 @@ function CheckedObj_File(){
 		
 		var element = {
 			obj : $(this),
-			filename : $(this).next().text()
+			filename : $(this).parent().text().trim()
 		};
 		checked_obj_file.push(element);
 		
@@ -132,9 +168,13 @@ function downloadFile(obj_file){
     var filename = obj_file.filename;
     var obj = obj_file.obj;
     var req = new XMLHttpRequest();
-    var param = "?filename="+encodeURIComponent(filename)+"";
     
-    req.open('get', "/download"+param);
+    var token_csrf = $("meta[name='_csrf']").attr("content");
+    var header_csrf = $("meta[name='_csrf_header']").attr("content");
+    
+    req.open('post', "/download");
+    req.setRequestHeader(header_csrf, token_csrf);
+    req.setRequestHeader("filename", filename);
     req.responseType = "blob";
     req.onreadystatechange = function (aEvt) {
     	  if (req.readyState === 4) {
@@ -181,7 +221,7 @@ function download(){
 	margin-top: 10px;
 }
 
-input[type="checkbox"]:checked+label {
+label+input[type="checkbox"]:checked {
 	font-weight: bold;
 }
 </style>
@@ -194,13 +234,18 @@ input[type="checkbox"]:checked+label {
 
 	<div id="filezone">
 		<button onclick="download()"> 다운로드 </button>
-		<ul id="filelist">
-			<li th:each="file:${fileList}">
-				<label th:text="${file}" th:te>
-					<input type="checkbox" name="file"> 
-				</label>
-			</li>
-		</ul>
+		<div>
+			<div class="file" th:each="file:${fileList}">
+				<!-- <img th:src="${file.img}" width="600" height="400"> -->
+        		<img src="http://qnimate.com/wp-content/uploads/2014/03/images2.jpg" width="600" height="400">
+    			<div class="filename">
+    				<label th:inline="text">
+						<input type="checkbox" name="file">
+						[[${file}]] 
+					</label>
+    			</div>
+    		</div>
+		</div>
 	</div>
 
 </body>

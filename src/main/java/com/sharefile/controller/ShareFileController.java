@@ -89,13 +89,14 @@ public class ShareFileController {
 		}
 	}
 	
-	@GetMapping("download")
+	@PostMapping("download")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void download(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		String fileName = req.getParameter("filename");
-		System.out.println(fileName);
-		
-		String crpytedName = fileRepo.findByUploaderIdAndName("445566", fileName);
+		String fileName = req.getHeader("filename");
+		System.out.println("fileName : "+fileName);
+		FileVO fileVO = fileRepo.findByUploaderIdAndName("445566", fileName);
+		String crpytedName = fileVO.getStoredName();
+		System.out.println("crpytedName : "+crpytedName);
 		byte b[] = new byte[4096];
 		try(
 			FileInputStream fileInputStream = new FileInputStream(storageDirectory+crpytedName);
@@ -108,7 +109,7 @@ public class ShareFileController {
 	        
 	        //한글업로드
 	        String sEncoding = new String(fileName.getBytes("euc-kr"),"8859_1");
-	        res.setHeader("Content-Disposition", "attachment; filename= " + sEncoding);
+	        res.setHeader("Content-Disposition", "attachment; filename= \"" + sEncoding + "\"");
 	        
 	        int numRead;
 	        while((numRead = fileInputStream.read(b,0,b.length))!= -1){

@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor;
 
 import com.security.service.CustomUserDetailsService;
 
@@ -84,7 +85,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.permitAll() 
 			.and() 
 			// 4 
-		.csrf().disable() ;
+		//.csrf().disable() 
+		;
 
 		//1) authorizeRequests 밑으로 antMatchers 들을 통해 url 에 대한 권한을 부여할 수 있습니다.
 		//2) formLogin 밑으로로그인에 대한 설정(파라미터, url, 핸들러 등등) 할 수 있습니다.
@@ -110,9 +112,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutSuccessUrl("/") 
 				.invalidateHttpSession(true) 
 					.permitAll() 
-			.and() 
-		.csrf().disable() ;
-		
+			.and()
+		//.csrf()
+		;
 		
 	} 
 }

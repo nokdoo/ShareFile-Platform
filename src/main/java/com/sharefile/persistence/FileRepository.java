@@ -11,6 +11,6 @@ public interface FileRepository  extends CrudRepository<FileVO, String> {
 
 	Iterable<FileVO> findAllByUploaderId(String uploaderId);
 
-	String findByUploaderIdAndName(String string, String fileName);
+	FileVO findByUploaderIdAndName(String string, String fileName);
 
 }
