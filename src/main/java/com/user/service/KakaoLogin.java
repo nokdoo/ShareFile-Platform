@@ -1,4 +1,4 @@
-package com.common.service;
+package com.user.service;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -20,6 +21,8 @@ import com.user.domain.AccountVO;
 public class KakaoLogin {
 	public static JsonNode getAccessToken(String autorize_code) {
 		final String RequestUrl = "https://kauth.kakao.com/oauth/token";
+		
+		
 
 		final List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 		postParams.add(new BasicNameValuePair("grant_type", "authorization_code"));
@@ -61,7 +64,7 @@ public class KakaoLogin {
 	}
 	
 	
-	public static JsonNode getId(String autorize_code) {
+	public static JsonNode signUp(String autorize_code) {
 		final String RequestUrl = "https://kapi.kakao.com/v1/user/signup";
 		final HttpClient client = HttpClientBuilder.create().build();
 		final HttpPost post = new HttpPost(RequestUrl);
@@ -127,6 +130,19 @@ public class KakaoLogin {
 		return returnNode;
 
 	}
+	
+	
+	
+	public static String getKakaoIdByTokenValidation(String accessToken) {
+
+
+		JsonNode UserNode = null;		
+		UserNode = getKakaoUserInfo(accessToken);
+		return UserNode.get("id").toString();
+
+	}
+	
+	
 
 	public static AccountVO changeData(JsonNode userInfo) {
 		AccountVO account = new AccountVO();
@@ -135,6 +151,9 @@ public class KakaoLogin {
 		account.setKakaoId(userInfo.path("id").asText()); // id -> vo 넣기
 		account.setNickname("null");
 		account.setTailCode(0);
+		
+		
+		
 		
 		/*
 		if (userInfo.path("kaccount_email_verified").asText().equals("true")) { // 이메일 받기 허용 한 경우

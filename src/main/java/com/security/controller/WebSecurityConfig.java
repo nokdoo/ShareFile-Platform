@@ -2,23 +2,24 @@ package com.security.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor;
 
-import com.security.service.CustomUserDetailsService;
 
 @EnableWebSecurity /* WebConfig 컴포넌트 등록 */
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+
 	@Autowired
-	CustomUserDetailsService customUserDetailsService;
+	AuthenticationProvider authenticationProvider;
 
 	/*
 	@Autowired
@@ -30,27 +31,54 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	  return new BCryptPasswordEncoder();
 	}
 	*/
-
 	
 	
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-	  auth.userDetailsService(customUserDetailsService).passwordEncoder(NoOpPasswordEncoder.getInstance());
-	}
-
+    
+	
 
 
 	/* Security 제외 패턴 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/resources/**");
+		web.ignoring().antMatchers("/css/**");
+		web.ignoring().antMatchers("/js/**");
+		web.ignoring().antMatchers("/img/**");
+		
 	}
 
 	
 	
 	
+	
+
+	@Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+		//System.out.println("인증 검증Provider");
+        auth.authenticationProvider(authenticationProvider);
+    }
+	
+	
+
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		
+		http.authorizeRequests()
+		.antMatchers("/access/**").hasRole("ADMIN")
+		.antMatchers("/login").permitAll()
+		.antMatchers("/**").hasRole("USER")
+		.and().formLogin()
+		.loginPage("/login")
+		.loginProcessingUrl("/login")
+		.defaultSuccessUrl("/home")
+    	.failureUrl("/login")
+    	.and()
+    	.logout();
+		
+	
+		
+		/*
+		
 		http
 				.authorizeRequests() // 인증 요청 선언??????
 
@@ -83,38 +111,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutSuccessUrl("/") 
 				.invalidateHttpSession(true) 
 					.permitAll() 
-			.and() 
+			//.and() 
 			// 4 
 		//.csrf().disable() 
 		;
-
+*/
 		//1) authorizeRequests 밑으로 antMatchers 들을 통해 url 에 대한 권한을 부여할 수 있습니다.
 		//2) formLogin 밑으로로그인에 대한 설정(파라미터, url, 핸들러 등등) 할 수 있습니다.
 		//3) logout 밑으로 로그아웃에 대한 설정(url, 세션, 쿠키 등등)을 할 수 있습니다.
 		//4) csrf CSRF 공격에 대해 방어 하고 토큰을 보낼지 여부.
 
 		
-		http 	.authorizeRequests() 
-		
-				.antMatchers("/temp2") 
-					.denyAll()
-			.and() 
-		
-				.formLogin()
-				.usernameParameter("userId") 
-				.passwordParameter("userPassword") 
-				.defaultSuccessUrl("/home") 
-					.permitAll() 
-			.and() 
-		
-		.logout() 
-				.logoutUrl("/customLogout") 
-				.logoutSuccessUrl("/") 
-				.invalidateHttpSession(true) 
-					.permitAll() 
-			.and()
-		//.csrf()
-		;
-		
+		//	System.out.println("뭐??????");
+		//http.authenticationProvider(authProvider);
+
+
 	} 
+	
+	
+
+	
+	
 }
