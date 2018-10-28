@@ -30,20 +30,28 @@ progress{
 	파일 목록
 */
 div.file {
+    	background-position: center 3px;
         margin: 5px;
-        border: 1px solid #ccc;
-        width: 180px;
+        padding: 5px;
+        border: 1px solid #07C;
+        width: 180;
         display: inline-block;
         vertical-align: top;
+        z-index: 1;
+    }
+    
+    div.file.checked{
+    	border: 3px solid #07C;
     }
     
     div.file:hover {
-        border: 1px solid #777;
+        border: 3px solid #07C;
     }
     
     div.file img {
+    	margin: 1px;
         width: 100%;
-        height: auto;
+        height: 100;
     }
     
     div.filename {
@@ -53,10 +61,6 @@ div.file {
         word-wrap: break-word;
 	}
 	
-	img.file{
-		width: 600;
-		height: 400;	
-}
     
     
     
@@ -76,15 +80,17 @@ function uploadFile(file, obj){
     var div_wrap = $('#filezone > div');
     var div_file = document.createElement('div');
     div_file.setAttribute("class", "file");
+    div_file.setAttribute("onclick", "toggle(this)");
     
     var progress = document.createElement('progress');
     
     var div_filename = document.createElement('div');
     div_filename.setAttribute("class", "filename");
-    
+   
     var input = document.createElement('input');
     input.setAttribute("type", "checkbox");
     input.setAttribute("name", "file");  
+    input.setAttribute("hidden", "true");
     
     var label = document.createElement('label');
     label.innerText = filename;
@@ -245,6 +251,16 @@ function download(){
 //다운로드 끝
 //================================================
 
+	
+function toggle(obj){
+	if($(obj).children("div").children().children().is(":checked")){
+		$(obj).children("div").children().children().prop("checked", false);
+		$(obj).removeClass("checked");
+	}else{
+		$(obj).children("div").children().children().prop("checked", true);
+		$(obj).addClass("checked");
+	}
+}
 </script>
 <style>
 #dropzone {
@@ -272,12 +288,12 @@ label+input[type="checkbox"]:checked {
 	<div id="filezone">
 		<button onclick="download()"> 다운로드 </button>
 		<div>
-			<div class="file" th:each="file, iter:${fileList}">
+			<div class="file" th:each="file, iter:${fileList}" onclick="toggle(this);">
 				<!-- <img th:src="${file.img}" width="600" height="400"> -->
         		<img th:src="${imgList[iter.index]}" class="file">
     			<div class="filename">
     				<label th:inline="text">
-						<input type="checkbox" name="file">
+						<input type="checkbox" hidden="true" name="file">
 						[[${file.name}]] 
 					</label>
     			</div>
@@ -286,4 +302,7 @@ label+input[type="checkbox"]:checked {
 	</div>
 
 </body>
+<script type="text/javascript">
+
+</script>
 </html>
