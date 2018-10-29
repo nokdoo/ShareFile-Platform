@@ -1,20 +1,12 @@
 package com.sharefile.domain;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.Table;
-import javax.servlet.http.Part;
-
-import org.springframework.beans.factory.annotation.Value;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,6 +31,7 @@ public class FileVO {
 	private String storedPath;
 	private String extension;
 	private String contentType;
+	private long fileSize;
 	private LocalDateTime regdate;
 	private LocalDateTime accessdate;
 

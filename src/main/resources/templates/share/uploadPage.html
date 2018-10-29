@@ -1,0 +1,282 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<title>uploca page.</title>
+<style>
+.upload-file {
+	
+}
+
+.upload-file:after {
+	content: "\A";
+	background: red;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 0%;
+}
+
+progress {
+	width: 100%;
+}
+
+/*
+	파일 목록
+*/
+div.file {
+	background-position: center 3px;
+	margin: 5px;
+	padding: 5px;
+	border: 1px solid #07C;
+	width: 180;
+	display: inline-block;
+	vertical-align: top;
+	z-index: 1;
+}
+
+div.file.checked {
+	border: 3px solid #07C;
+}
+
+div.file:hover {
+	border: 3px solid #07C;
+}
+
+div.file img {
+	margin: 1px;
+	width: 100%;
+	height: 100;
+}
+
+div.filename {
+	padding: 15px;
+	text-align: center;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+}
+</style>
+<script type="text/javascript" th:src="@{/js/jquery-3.3.1.js}"></script>
+<script type="text/javascript">
+	//업로드 시작
+	//================================================
+	function uploadFile(file, obj) {
+
+		var data = new FormData();
+		var filename = file.name;
+		var filetype = file.type;
+		var ext = filename.substr(filename.lastIndexOf('.') + 1);
+
+		var div_wrap = $('#filezone > div');
+		var div_file = document.createElement('div');
+		div_file.setAttribute("class", "file");
+		div_file.setAttribute("onclick", "toggle(this)");
+
+		var progress = document.createElement('progress');
+
+		var div_filename = document.createElement('div');
+		div_filename.setAttribute("class", "filename");
+
+		var input = document.createElement('input');
+		input.setAttribute("type", "checkbox");
+		input.setAttribute("name", "file");
+		input.setAttribute("hidden", "true");
+
+		var label = document.createElement('label');
+		label.innerText = filename;
+		label.prepend(input);
+
+		div_filename.append(label);
+
+		div_file.append(progress);
+		div_file.append(div_filename);
+
+		div_wrap.prepend(div_file);
+
+		var token_csrf = $("meta[name='_csrf']").attr("content");
+		var header_csrf = $("meta[name='_csrf_header']").attr("content");
+
+		var req = new XMLHttpRequest();
+		data.set('file', file);
+		req.open('post', '/upload');
+		req.setRequestHeader(header_csrf, token_csrf);
+		req.responseType = 'blob';
+		req.onreadystatechange = function(aEvt) {
+			if (req.readyState === 4) {
+				if (req.status === 200) {
+					progress.remove();
+					var img = document.createElement('img');
+					img.setAttribute("class", "file");
+					if (filetype.match("image.*")) {
+						var reader = new FileReader();
+						reader.onload = function() {
+							img.setAttribute("src", reader.result);
+						}
+						reader.readAsDataURL(file);
+					} else {
+						img.setAttribute("src", "/img/extension/" + ext
+								+ ".png");
+					}
+					div_file.prepend(img);
+				} else
+					console.log("error" + filename);
+			}
+		};
+		req.send(data);
+
+	}
+
+	//파일 멀티 업로드
+	function F_FileMultiUpload(files, obj) {
+		if (confirm(files.length + "개의 파일을 업로드 하시겠습니까?")) {
+			for (var i = 0; i < files.length; i++) {
+				uploadFile(files[i], obj);
+			}
+		}
+	}
+
+	//파일 멀티 업로드 Callback
+	function F_FileMultiUpload_Callback(files) {
+		for (var i = 0; i < files.length; i++)
+			console.log(files[i].file_nm + " - " + files[i].file_size);
+	}
+
+	$(function() {
+		var obj = $("#dropzone");
+
+		obj.on('dragenter', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+			$(this).css('border', '2px solid #5272A0');
+		});
+
+		obj.on('dragleave', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+			$(this).css('border', '2px dotted #8296C2');
+		});
+
+		obj.on('dragover', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		});
+
+		obj.on('drop', function(e) {
+			e.preventDefault();
+			$(this).css('border', '2px dotted #8296C2');
+
+			var files = e.originalEvent.dataTransfer.files;
+			if (files.length < 1)
+				return;
+
+			F_FileMultiUpload(files, obj);
+		});
+
+	});
+
+	//업로드 끝
+	//================================================
+
+	//다운로드 시작
+	//================================================
+
+	//체크 목록
+	function CheckedObj_File() {
+		var checked_obj_file = [];
+		$("[name=file]").each(function() {
+			if (!$(this).is(":checked"))
+				return true;
+
+			var element = {
+				obj : $(this),
+				filename : $(this).parent().text().trim()
+			};
+			checked_obj_file.push(element);
+
+		});
+		return checked_obj_file;
+	}
+
+	function downloadFile(obj_file) {
+		var filename = obj_file.filename;
+		var obj = obj_file.obj;
+		var encoded_filename= encodeURIComponent(filename);
+		var a = document.createElement("a");
+		a.setAttribute("href", "/download/"+encoded_filename);
+		a.setAttribute("download", "");
+		a.click();
+		obj.prop("checked", false);
+		a.remove();
+	}
+
+	function download() {
+		var download_list = CheckedObj_File();
+		if (confirm(download_list.length + "개의 파일을 다운로드 하시겠습니까?")) {
+			for (var i = 0; i < download_list.length; i++) {
+				downloadFile(download_list[i]);
+			}
+		}
+	}
+
+	//다운로드 끝
+	//================================================
+
+	function toggle(obj) {
+		if ($(obj).children("div").children().children().is(":checked")) {
+			$(obj).children("div").children().children().prop("checked", false);
+			$(obj).removeClass("checked");
+		} else {
+			$(obj).children("div").children().children().prop("checked", true);
+			$(obj).addClass("checked");
+		}
+	}
+</script>
+<style>
+#dropzone {
+	border: 2px dotted #3292A2;
+	width: 90%;
+	height: 50px;
+	color: #92AAB0;
+	text-align: center;
+	font-size: 24px;
+	padding-top: 12px;
+	margin-top: 10px;
+}
+
+label+input[type="checkbox"]:checked {
+	font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+	<div id="dropzone">
+		<div id="dropzone-text">Drag &#38; Drop Files Here</div>
+	</div>
+
+	<div id="filezone">
+		<button onclick="download()">다운로드</button>
+		<div>
+			<div class="file" th:each="file:${fileList}" onclick="toggle(this);">
+				<!-- <img th:src="${file.img}" width="600" height="400"> -->
+				<img th:src="${file.get('img_src').getAsString()}" class="file">
+				<div class="filename">
+					<label th:inline="text"> <input type="checkbox"
+						hidden="true" name="file">
+						[[${file.get('name').getAsString()}]]
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript">
+	
+</script>
+</html>
